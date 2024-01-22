@@ -19,6 +19,7 @@ class UserModel(BaseModel):
 
 class UserRequestModel(BaseModel):
     user_id: int
+    create_date: datetime.datetime
     request_link: str
     fulfilled: bool
 

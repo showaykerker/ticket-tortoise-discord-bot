@@ -7,6 +7,8 @@ import ezcord
 
 from cogwatch import watch
 
+from mongo_connection import MongoConnection
+
 dotenv.load_dotenv()
 
 class TicketTortoise(ezcord.Bot):
@@ -14,6 +16,7 @@ class TicketTortoise(ezcord.Bot):
         super().__init__(
             intents=discord.Intents.default(),
             language="en")
+        self.mongo = MongoConnection()
         self.load_cogs("cogs")
         self.add_listener(self.on_events_forward, "on_message")
 
