@@ -14,7 +14,6 @@ class TicketTortoise(ezcord.Bot):
         super().__init__(
             intents=discord.Intents.default(),
             language="en")
-        self.add_help_command()
         self.load_cogs("cogs")
         self.add_listener(self.on_events_forward, "on_message")
 
