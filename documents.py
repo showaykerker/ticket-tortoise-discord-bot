@@ -1,39 +1,43 @@
 import datetime
 import pytz
 from typing import List, Dict, Union
+from pydantic import BaseModel
+from typing import List, Dict, Union
+import datetime
 
 # Set the timezone to +8
 timezone = pytz.timezone('Asia/Taipei')
 
-USER_MODEL = {
-    "discord_id": int,
-    "name": str,
-    "create_date": datetime.datetime,
-    "last_activate_date": datetime.datetime,
-    "configs": Dict[str, Union[str, int, bool, List[str]]],
-    "events_created": List[int]
-}
+class UserModel(BaseModel):
+    discord_id: int
+    name: str
+    create_date: datetime.datetime
+    last_activate_date: datetime.datetime
+    configs: Dict[str, Union[str, int, bool, List[str]]]
+    events_created: List[int]
 
-EVENT_MODEL = {
-    "name": str,
-    "date": datetime.datetime,
-    "url": str,
-    "available_zones": List[str],
-    "expired": bool,
-    "required_by": List[int],
-    "create_by": str,
-    "create_date": datetime.datetime
-}
+class EventModel(BaseModel):
+    name: str
+    date: datetime.datetime
+    url: str
+    available_zones: List[str]
+    expired: bool
+    required_by: List[int]
+    create_by: str
+    create_date: datetime.datetime
 
-EVENT_REQUIREMENT_MODEL = {
-    "event_id": int,
-    "user_id": int,
-    "interested_zones": List[str],
-    "create_date": datetime.datetime,
-    "expired": bool
-}
+class EventRequirementModel(BaseModel):
+    event_id: int
+    user_id: int
+    interested_zones: List[str]
+    create_date: datetime.datetime
+    expired: bool
 
-class ABC:
+USER_MODEL = UserModel.__annotations__
+EVENT_MODEL = EventModel.__annotations__
+EVENT_REQUIREMENT_MODEL = EventRequirementModel.__annotations__
+
+class BaseDocument:
     def __init__(self, model: dict, **kwargs):
         self._model = model
         self.create_date = datetime.datetime.now(timezone) # Can be overwritten
@@ -46,28 +50,21 @@ class ABC:
                 self.create_date = value or self.create_date
             else:
                 setattr(self, key, value)
-        for key, dtype_ in self._model.items():
-            if key not in kwargs:
-                try:
-                    setattr(self, key, dtype_())
-                except:
-                    setattr(self, key, None)
         
     def to_dict(self) -> dict:
-        return {key: getattr(self, key) for key in self._model.keys()}
+        return {key: getattr(self, key) for key in self._model.keys() if hasattr(self, key)}
 
     
-class User(ABC):
+class User(BaseDocument):
     def __init__(self, **kwargs):
         super().__init__(USER_MODEL, **kwargs)
         assert "discord_id" in kwargs, "discord_id is required for User creation."
         assert "name" in kwargs, "name is required for User creation."
 
-class Event(ABC):
+class Event(BaseDocument):
     def __init__(self, **kwargs):
         super().__init__(EVENT_MODEL, **kwargs)
-        
 
-class EventRequirement(ABC):
+class EventRequirement(BaseDocument):
     def __init__(self, **kwargs):
         super().__init__(EVENT_REQUIREMENT_MODEL, **kwargs)
