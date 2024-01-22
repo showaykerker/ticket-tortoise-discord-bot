@@ -11,7 +11,7 @@ class Template(Cog, hidden=True):
     @dc.slash_command(
         name="template_slash_cmd_name", description="template slash cmd desc."
     )
-    async def command_name(self, ctx) -> None:
+    async def command_name(self, ctx: ApplicationContext) -> None:
         await ctx.send("hi")
 
 
