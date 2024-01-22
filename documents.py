@@ -4,6 +4,7 @@ from typing import List, Dict, Union
 from pydantic import BaseModel
 from typing import List, Dict, Union
 import datetime
+from pydantic import validators, HttpUrl
 
 # Set the timezone to +8
 timezone = pytz.timezone('Asia/Taipei')
@@ -15,6 +16,11 @@ class UserModel(BaseModel):
     last_activate_date: datetime.datetime
     configs: Dict[str, Union[str, int, bool, List[str]]]
     events_created: List[int]
+
+class UserRequestModel(BaseModel):
+    user_id: int
+    request_link: str
+    fulfilled: bool
 
 class EventModel(BaseModel):
     name: str
@@ -34,6 +40,7 @@ class EventRequirementModel(BaseModel):
     expired: bool
 
 USER_MODEL = UserModel.__annotations__
+USER_REQUEST_MODEL = UserRequestModel.__annotations__
 EVENT_MODEL = EventModel.__annotations__
 EVENT_REQUIREMENT_MODEL = EventRequirementModel.__annotations__
 
@@ -50,16 +57,22 @@ class BaseDocument:
                 self.create_date = value or self.create_date
             else:
                 setattr(self, key, value)
-        
+
     def to_dict(self) -> dict:
         return {key: getattr(self, key) for key in self._model.keys() if hasattr(self, key)}
 
-    
+
 class User(BaseDocument):
     def __init__(self, **kwargs):
         super().__init__(USER_MODEL, **kwargs)
         assert "discord_id" in kwargs, "discord_id is required for User creation."
         assert "name" in kwargs, "name is required for User creation."
+
+class UserRequest(BaseDocument):
+    def __init__(self, **kwargs):
+        if "fulfilled" not in kwargs:
+            kwargs["fulfilled"] = False
+        super().__init__(USER_REQUEST_MODEL, **kwargs)
 
 class Event(BaseDocument):
     def __init__(self, **kwargs):
