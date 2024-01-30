@@ -17,7 +17,7 @@ class TestUserModel(unittest.TestCase):
             },
             events_created=[1, 2, 3]
         )
-        
+
     def test_user_model_initialization(self):
         self.assertEqual(self.user.discord_id, 111111111)
         self.assertEqual(self.user.name, "John Doe")
@@ -25,7 +25,7 @@ class TestUserModel(unittest.TestCase):
         self.assertIsNotNone(self.user.last_activate_date)
         self.assertIsInstance(self.user.configs, dict)
         self.assertIsInstance(self.user.events_created, list)
-    
+
     def test_user_model_overwrite(self):
         self.user.discord_id = 987654321
         self.user.name = "Jane Smith"
@@ -38,7 +38,7 @@ class TestUserModel(unittest.TestCase):
             "setting4": ["option3", "option4"]
         }
         self.user.events_created = [4, 5, 6]
-        
+
         self.assertEqual(self.user.discord_id, 987654321)
         self.assertEqual(self.user.name, "Jane Smith")
         self.assertEqual(self.user.create_date, datetime.datetime(2022, 1, 1))
@@ -50,7 +50,7 @@ class TestUserModel(unittest.TestCase):
             "setting4": ["option3", "option4"]
         })
         self.assertEqual(self.user.events_created, [4, 5, 6])
-    
+
     def tearDown(self):
         pass
 

@@ -28,7 +28,7 @@ class TicketTortoise(ezcord.Bot):
         # Forward message from other robot
         if message.author.bot:
             return
-        
-        
+
+
 client = TicketTortoise()
 client.run(str(os.getenv("TOKEN")))
