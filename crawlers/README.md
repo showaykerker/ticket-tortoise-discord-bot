@@ -2,6 +2,25 @@
 ## How to Implement a New Crawler Module
 This guide will walk you through the process of implementing a new crawler module in this project.
 
+### Step 0: Prepare for the Virtual Environment if you Haven't
+```bash
+# Install python3.9 and python3.9-pip if you haven't
+
+# Install virtual environment if you haven't
+$ pip3.9 install virtualenv
+# Check if virtualenv is installed
+$ virtualenv --version
+
+# Create venv in the root folder
+$ python3.9 -m venv venv
+
+# Source venv
+$ source venv/bin/activate
+
+# Install packages from requirements.txt
+(venv)$ pip install -r requirements.txt
+```
+
 ### Step 1: Create a New Python File
 Create a new Python file in the `crawlers` directory. The file name should be descriptive of the website you are crawling. For example, if you are creating a crawler for a website called `TicketMaster`, you might name your file `ticketmaster_crawler.py`.
 
@@ -58,8 +77,15 @@ if __name__ == "__main__":
         for show_time in activity.show_times:
             print(f"    {show_time.name}: {show_time.available}")
 ```
+and run the following command from the root folder
+
+```bash
+(venv)$ python crawlers/ticket_master_crawler.py
+```
 
 This will print out the name and availability of each activity and show time.
+
+Optionally, you can use `crawler/crawler_experiment.ipynb` for developing the new module, which will reduce the request frequency of the crawler and speed up the process.
 
 Note that the function `parse_activities(self) -> None` implemented in the base class `crawler_base.py` will walk through all the urls passed into the inherit class, parse urls into soup objects then feed to the `parse(self, soup: BeautifulSoup) -> bool` function which you should implement.
 
