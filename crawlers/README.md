@@ -80,7 +80,7 @@ if __name__ == "__main__":
 and run the following command from the root folder
 
 ```bash
-(venv)$ python crawlers/ticket_master_crawler.py
+(venv)$ python crawlers/ticketmaster_crawler.py
 ```
 
 This will print out the name and availability of each activity and show time.
