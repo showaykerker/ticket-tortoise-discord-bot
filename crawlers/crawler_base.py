@@ -25,6 +25,20 @@ class CrawlerBase:
             # sudo apt-get install chromium-chromedriver
             self.driver = webdriver.Chrome(options=self.options, service=self.service)
 
+    def parse_activities(self) -> None:
+        soups = self.get_soups(self.urls)
+        for i_soup, soup in enumerate(soups):
+            print(f"Parsing {i_soup}th soup, {self.urls[i_soup]}")
+            for i in range(10):
+                success = self.parse(soup)
+                if success: break
+
+    def parse_activity_list(self) -> None:
+        raise NotImplementedError()
+
+    def parse(self, soup: BeautifulSoup) -> None:
+        raise NotImplementedError()
+
     def get_soups(self, urls: List[str]) -> List[BeautifulSoup]:
         return [self.get_soup(url) for url in urls]
 
@@ -37,18 +51,6 @@ class CrawlerBase:
             soup = BeautifulSoup(requests.get(url).text, "html.parser")
         return soup
 
-    def parse_activity_list(self) -> None:
-        raise NotImplementedError()
-
-    def parse(self, soup: BeautifulSoup) -> None:
-        raise NotImplementedError()
-
-    def parse_all(self, soups: List[BeautifulSoup]) -> None:
-        for soup in soups:
-            for i in range(10):
-                success = self.parse(soup)
-                if success: break
-
 class SeatArea(BaseModel):  # 座位區域
     id_: int
     name: str
@@ -60,10 +62,12 @@ class ShowTime(BaseModel):  # 場次
     datetime: str
     seat_areas: List[SeatArea]
     available: bool
+    cancelled: bool = False
 
 class Activity(BaseModel):  # 活動
     name: str
     show_times: List[ShowTime]
     available: bool
     parsed: bool = False
+    cancelled: bool = False
 
