@@ -10,13 +10,11 @@ from crawler_base import Activity
 class TicketPlusCrawler(CrawlerBase):
     def __init__(self, urls: List[str] = []):
         super().__init__(
-            name="遠大娛樂 TicketPlus",
+            name="遠大售票系統 TicketPlus",
             main_url="https://ticketplus.com.tw/",
             use_selenium=True
         )
         self.urls = urls
-        soups = self.get_soups(urls)
-        self.parse_all(soups)
 
     def parse_activity_list(self) -> None:
         pass
@@ -25,9 +23,10 @@ class TicketPlusCrawler(CrawlerBase):
         show_times = []
         # parse <title> inside <head>
         title = soup.find("title").text.strip()
-        if not title:
+        sesses = soup.find_all("div", class_="sesstion-item")
+        if len(sesses) == 0:
             return False
-        for _sess in soup.find_all("div", class_="sesstion-item"):
+        for _sess in sesses:
             sess = _sess.find("div")
             first_child = sess.contents[0]
             second_child = sess.contents[1]
@@ -59,6 +58,7 @@ if __name__ == "__main__":
             "https://ticketplus.com.tw/activity/b0b7808cd4e5ba73763b9c5f583b98f2"
         ]
     )
+    crawler.parse_activities()
     for activity in crawler.activities.values():
         print(f"{activity.name}: {activity.available}")
         for show_time in activity.show_times:
