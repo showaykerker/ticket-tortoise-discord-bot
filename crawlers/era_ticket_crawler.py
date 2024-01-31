@@ -36,7 +36,6 @@ class EraTicketCrawler(CrawlerBase):
             sold_out_prices = sess_info[2].find("span").find_all("del")
             sold_out_prices = list(map(lambda x: x.text.strip(), sold_out_prices))
             is_cancelled = "取消" in sess_info[3].find("button").text.strip()
-            print(sess_date, sess_time, sold_out_prices, all_prices, is_cancelled)
             seat_areas = []
             for i_price, price in enumerate(all_prices):
                 seat_areas.append(SeatArea(

@@ -28,7 +28,6 @@ class CrawlerBase:
     def parse_activities(self) -> None:
         soups = self.get_soups(self.urls)
         for i_soup, soup in enumerate(soups):
-            print(f"Parsing {i_soup}th soup, {self.urls[i_soup]}")
             for i in range(10):
                 success = self.parse(soup)
                 if success: break
