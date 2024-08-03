@@ -4,9 +4,9 @@ from typing import Union
 from documents import User, Event, EventRequirement, UserRequest
 
 class MongoConnection:
-    def __init__(self):
-        self.client = MongoClient("localhost", 27017)
-        self.db = self.client["ticket-tortoise"]
+    def __init__(self, host: str = "localhost", port: int = 27017, db_name: str = "ticket-tortoise"):
+        self.client = MongoClient(host, port)
+        self.db = self.client[db_name]
 
     def has_user(self, discord_id: int) -> bool:
         return self.db.users.find_one({"discord_id": discord_id}) is not None

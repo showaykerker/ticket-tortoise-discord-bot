@@ -16,7 +16,11 @@ class TicketTortoise(ezcord.Bot):
         super().__init__(
             intents=discord.Intents.default(),
             language="en")
-        self.mongo = MongoConnection()
+        self.mongo = MongoConnection(
+            os.getenv("MONGO_HOST_URI"),
+            os.getenv("MONGO_HOST_PORT"),
+            os.getenv("MONGO_DB_NAME")
+        )
         self.load_cogs("cogs")
         self.add_listener(self.on_events_forward, "on_message")
 
